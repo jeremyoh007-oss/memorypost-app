@@ -1,0 +1,2 @@
+# Copy to .dev.vars for `wrangler dev` (git-ignored). Use the "Decoding" (일반 인증키) key.
+KMA_SERVICE_KEY=put-your-key-here

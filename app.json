@@ -1,25 +1,53 @@
 {
   "expo": {
-    "name": "memorypost-app",
-    "slug": "memorypost-app",
+    "name": "추억 우체국",
+    "slug": "memorypost",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.memorypost"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#F7F5F1",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.example.memorypost"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "output": "single",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-image",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#F7F5F1",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160
+        }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "오늘 일정을 기기 안에서만 읽어 홈 화면에 보여 드려요. 일정은 어디에도 전송하지 않아요."
+        }
+      ]
+    ],
+    "scheme": "memorypost",
+    "backgroundColor": "#F7F5F1",
+    "experiments": {
+      "typedRoutes": false
     }
   }
 }

@@ -1,0 +1,9 @@
+# Cloudflare Worker: 기상청 단기예보 proxy for 추억 우체국.
+# NO secrets in this file. Set the key with:  npx wrangler secret put KMA_SERVICE_KEY
+name = "memorypost-weather"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+
+[vars]
+# Comma-separated origins allowed by CORS. Native apps don't send Origin; "*" is fine for public weather.
+ALLOWED_ORIGINS = "*"

@@ -39,3 +39,9 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# secrets / local env
+.env
+.dev.vars
+server/weather-proxy/node_modules/
+server/weather-proxy/.wrangler/
