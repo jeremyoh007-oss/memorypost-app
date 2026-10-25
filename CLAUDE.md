@@ -29,7 +29,7 @@
 | 앱 | Expo SDK 58 + expo-router + zustand. `app/`(홈·엽서함·옷장·친구들), `components/`, `store/`, `data/`, `services/` |
 | 폰 설치 | EAS preview APK 빌드 성공, 본인 Android 폰에 설치 완료 (EAS 계정 `jeremyoh`, 프로젝트 `memorypost`) |
 | 디버그 메뉴 | `EXPO_PUBLIC_DEV_MENU=1`일 때만 표시 (preview 프로필에 켜져 있음) |
-| 날씨 | `server/weather-proxy/` Cloudflare Worker 작성됨, 미배포. 키(`KMA_SERVICE_KEY`) 미발급 → 현재 목업 |
+| 날씨 | `server/weather-proxy/` Cloudflare Worker 보강·로컬 시험 통과(10-25: 저녁 최고·최저 유지, 키 오류 원인 표시), 미배포. 키(`KMA_SERVICE_KEY`) 미발급 → 현재 목업. Windows PC는 wrangler 로그인됨 |
 | 패키지명 | 아직 `com.example.memorypost` (출시 전 변경 필요, 후보 `com.jeremyoh.memorypost`) |
 | 웹 시안 | https://claude.ai/artifact/SEjwM4zC5vMuDMG8yHu2ob (v8) |
 | 사업계획서 | https://claude.ai/artifact/Ac5mQi3y7QasvPyut5WJ5f (첫해 비용 47만 원, 개발 100시간 추정) |
