@@ -9,7 +9,8 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_DEV_MENU": "1"
+        "EXPO_PUBLIC_DEV_MENU": "1",
+        "EXPO_PUBLIC_WEATHER_URL": "https://memorypost-weather.jeremyoh007.workers.dev"
       }
     },
     "production": {}
