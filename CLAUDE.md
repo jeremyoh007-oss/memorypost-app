@@ -46,7 +46,7 @@
 npx expo start                                          # 개발 서버 (Expo Go)
 npx eas-cli@latest build -p android --profile preview   # 폰 설치용 APK 재빌드
 npx tsc --noEmit                                        # 타입 검사
-npx expo lint                                           # 린트
 ```
+- 린트: 저장소에 ESLint 설정이 아직 없다. `npx expo lint` 는 eslint 를 설치하고 package.json 을 바꾸니 쓰지 않는다. 바뀐 파일만 임시 설정으로 점검한다 — 루트에 `eslint.tmp.config.js`(`eslint-config-expo/flat` 를 `defineConfig` 로 감싼 것)를 만들고 `npx eslint -c eslint.tmp.config.js <파일>` 뒤 지운다.
 - 패키지 추가는 반드시 `npx expo install <패키지>`.
 - 코드 수정 후에는 위 타입 검사·린트를 통과시키고 커밋한다.
