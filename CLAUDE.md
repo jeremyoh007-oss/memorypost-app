@@ -29,7 +29,7 @@
 | 앱 | Expo SDK 58 + expo-router + zustand. `app/`(홈·엽서함·옷장·친구들), `components/`, `store/`, `data/`, `services/` |
 | 폰 설치 | EAS preview APK 빌드 성공, 본인 Android 폰에 설치 완료 (EAS 계정 `jeremyoh`, 프로젝트 `memorypost`) |
 | 디버그 메뉴 | `EXPO_PUBLIC_DEV_MENU=1`일 때만 표시 (preview 프로필에 켜져 있음) |
-| 날씨 | `server/weather-proxy/` Cloudflare Worker 보강·로컬 시험 통과(10-25: 저녁 최고·최저 유지, 키 오류 원인 표시), 미배포. 키(`KMA_SERVICE_KEY`) 미발급 → 현재 목업. Windows PC는 wrangler 로그인됨 |
+| 날씨 | 연결됨(10-25). Worker `https://memorypost-weather.jeremyoh007.workers.dev` 배포, 키 `KMA_SERVICE_KEY` 는 Cloudflare 비밀값으로만 저장. `eas.json` preview 에 `EXPO_PUBLIC_WEATHER_URL` 넣음. 미세먼지는 아직 없음(에어코리아 별도). Windows PC는 wrangler 로그인됨 |
 | 패키지명 | 아직 `com.example.memorypost` (출시 전 변경 필요, 후보 `com.jeremyoh.memorypost`) |
 | 웹 시안 | https://claude.ai/artifact/SEjwM4zC5vMuDMG8yHu2ob (v8) |
 | 사업계획서 | https://claude.ai/artifact/Ac5mQi3y7QasvPyut5WJ5f (첫해 비용 47만 원, 개발 100시간 추정) |
@@ -37,7 +37,7 @@
 
 ## 다음 할 일 후보
 1. 폰에서 써 본 피드백 반영 (UI·반응·문구)
-2. 실제 기상청 날씨 연결 (data.go.kr 15084084 키 발급 → Worker 배포)
+2. 미세먼지 연결 (에어코리아, 기상청 날씨는 10-25 연결 끝)
 3. 패키지명 확정 후 재빌드
 4. 출시 준비: production 프로필, 아이콘·스토어 문구, 비공개 테스트(12명·14일)
 
