@@ -4,7 +4,7 @@
  * Holds the 공공데이터포털 key as the secret KMA_SERVICE_KEY; caches each region for 1 hour.
  * No user data or location is received: only one of 17 시·도 ids.
  */
-import { fetchKma } from './kma';
+import { fetchKma, KmaError } from './kma';
 import { GRID } from './regions';
 
 export interface Env {
@@ -14,6 +14,9 @@ export interface Env {
 }
 
 const TTL = 3600;
+
+/** Per-isolate copy in front of the Cache API, which is a no-op in some setups (previews, Access, possibly workers.dev). */
+const memo = new Map<string, string>();
 
 function cors(req: Request, env: Env): Record<string, string> {
   const origin = req.headers.get('origin') ?? '';
@@ -41,23 +44,29 @@ export default {
 
     // One cache entry per region per hour (KST hour bucket).
     const bucket = Math.floor(Date.now() / (TTL * 1000));
-    const cacheKey = new Request(`https://weather-cache.internal/${region}/${bucket}`);
+    const memoKey = `${region}/${bucket}`;
+    const cacheKey = new Request(`https://weather-cache.internal/${memoKey}`);
     const cache = caches.default;
+    const ok = (body: string, state: 'HIT' | 'MISS') =>
+      new Response(body, { status: 200, headers: { 'content-type': 'application/json; charset=utf-8', 'x-cache': state, 'cache-control': 'public, max-age=600', ...h } });
+
+    const local = memo.get(memoKey);
+    if (local) return ok(local, 'HIT');
     const hit = await cache.match(cacheKey);
-    if (hit) {
-      const body = await hit.text();
-      return new Response(body, { status: 200, headers: { 'content-type': 'application/json; charset=utf-8', 'x-cache': 'HIT', 'cache-control': 'public, max-age=600', ...h } });
-    }
+    if (hit) return ok(await hit.text(), 'HIT');
 
     try {
       const data = await fetchKma(env.KMA_SERVICE_KEY, region, grid.nx, grid.ny);
       const body = JSON.stringify(data);
+      for (const k of memo.keys()) if (!k.endsWith(`/${bucket}`)) memo.delete(k);
+      memo.set(memoKey, body);
       ctx.waitUntil(cache.put(cacheKey, new Response(body, { headers: { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL}` } })));
-      return new Response(body, { status: 200, headers: { 'content-type': 'application/json; charset=utf-8', 'x-cache': 'MISS', 'cache-control': 'public, max-age=600', ...h } });
+      return ok(body, 'MISS');
     } catch (e) {
-      // Never echo the upstream URL (it contains the key).
-      console.error('kma_failed', region, e instanceof Error ? e.message : 'unknown');
-      return json({ error: 'upstream_failed' }, 502, h);
+      // Never echo the upstream URL (it contains the key); KmaError reasons are fixed codes like SERVICE_KEY_IS_NOT_REGISTERED_ERROR.
+      const reason = e instanceof KmaError ? e.reason : 'unknown';
+      console.error('kma_failed', region, reason);
+      return json({ error: 'upstream_failed', reason }, 502, h);
     }
   },
 } satisfies ExportedHandler<Env>;
