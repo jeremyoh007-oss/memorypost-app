@@ -77,8 +77,8 @@ function FriendCard({ k, w }: { k: CharId; w: number }) {
         <Svg style={StyleSheet.absoluteFill} viewBox="0 0 100 100" preserveAspectRatio="none">
           <Defs>
             <RadialGradient id={`fg-${k}`} cx="50%" cy="85%" rx="80%" ry="80%">
-              <Stop offset="0" stopColor="#EDE5D8" />
-              <Stop offset="0.7" stopColor="#F7F3EC" />
+              <Stop offset="0" stopColor="#ECECEA" />
+              <Stop offset="0.7" stopColor="#FFFFFF" />
             </RadialGradient>
           </Defs>
           <Ellipse cx={50} cy={85} rx={100} ry={100} fill={`url(#fg-${k})`} />
@@ -112,7 +112,7 @@ function Bar({ pct }: { pct: number }) {
 }
 
 function FBtn({ title, onPress, variant = 'dark' }: { title: string; onPress?: () => void; variant?: 'dark' | 'light' | 'on' }) {
-  const bg = variant === 'dark' ? C.ink : variant === 'light' ? '#F1EDE6' : 'transparent';
+  const bg = variant === 'dark' ? C.ink : variant === 'light' ? C.bg : 'transparent';
   const fg = variant === 'dark' ? '#fff' : variant === 'light' ? C.ink : C.ink2;
   return (
     <Pressable
@@ -149,7 +149,7 @@ const s = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
   },
   badgeLtd: { backgroundColor: C.accent },
-  badgeHid: { backgroundColor: '#1C1A17' },
+  badgeHid: { backgroundColor: C.ink },
   bar: { height: 5, borderRadius: 5, backgroundColor: C.track, marginHorizontal: 4, overflow: 'hidden' },
   barFill: { height: '100%', backgroundColor: C.accent, borderRadius: 5 },
   fbtn: { borderRadius: 12, paddingVertical: 8, width: '100%' },

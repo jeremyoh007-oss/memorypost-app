@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useEffect, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated, {
   Easing,
   Extrapolation,
@@ -27,17 +27,17 @@ export function Pet({ img, width, onPress, label }: { img: ImageKey; width: numb
   const squish = useSharedValue(1);
 
   useEffect(() => {
-    breathe.value = withRepeat(withTiming(1, { duration: 1600, easing: Easing.inOut(Easing.ease) }), -1, true);
+    breathe.set(withRepeat(withTiming(1, { duration: 1600, easing: Easing.inOut(Easing.ease) }), -1, true));
   }, [breathe]);
 
   useEffect(() => {
     if (!bounce.key) return;
     if (bounce.kind === 'hop') {
-      hop.value = 0;
-      hop.value = withTiming(1, { duration: 500, easing: Easing.bezier(0.3, 1.4, 0.5, 1) });
+      hop.set(0);
+      hop.set(withTiming(1, { duration: 500, easing: Easing.bezier(0.3, 1.4, 0.5, 1) }));
     } else {
-      squish.value = 0;
-      squish.value = withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) });
+      squish.set(0);
+      squish.set(withTiming(1, { duration: 350, easing: Easing.out(Easing.ease) }));
     }
   }, [bounce, hop, squish]);
 
@@ -53,7 +53,7 @@ export function Pet({ img, width, onPress, label }: { img: ImageKey; width: numb
 
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label} style={{ width, height }}>
-      <SoftShadow style={{ left: width * 0.26, width: width * 0.48, bottom: -height * 0.015, height: height * 0.06 }} />
+      <SoftShadow color="#000" opacity={0.1} style={{ left: width * 0.22, width: width * 0.56, bottom: -height * 0.015, height: height * 0.06 }} />
       <Animated.View style={[{ width, height, transformOrigin: '50% 100%' }, anim]}>
         <Image source={IMAGES[img]} style={{ width, height }} contentFit="contain" transition={0} />
       </Animated.View>
@@ -63,17 +63,22 @@ export function Pet({ img, width, onPress, label }: { img: ImageKey; width: numb
 
 /** Floating hearts burst; anchored at (x, y) within the hero. */
 export function Hearts({ x, y, spread }: { x: number; y: number; spread: number }) {
-  const hearts = useUI((s) => s.hearts);
   const [bursts, setBursts] = useState<{ key: number; items: { dx: number; ox: number }[] }[]>([]);
 
   useEffect(() => {
-    if (!hearts.key || !hearts.n) return;
-    const items = Array.from({ length: hearts.n }, () => ({ dx: Math.random() * 60 - 30, ox: (Math.random() - 0.5) * spread * 0.4 }));
-    const key = hearts.key;
-    setBursts((b) => [...b, { key, items }]);
-    const t = setTimeout(() => setBursts((b) => b.filter((x) => x.key !== key)), 1600);
-    return () => clearTimeout(t);
-  }, [hearts, spread]);
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const unsub = useUI.subscribe((st, prev) => {
+      const h = st.hearts;
+      if (h === prev.hearts || !h.key || !h.n) return;
+      const items = Array.from({ length: h.n }, () => ({ dx: Math.random() * 60 - 30, ox: (Math.random() - 0.5) * spread * 0.4 }));
+      setBursts((b) => [...b, { key: h.key, items }]);
+      timers.push(setTimeout(() => setBursts((b) => b.filter((x) => x.key !== h.key)), 1600));
+    });
+    return () => {
+      unsub();
+      timers.forEach(clearTimeout);
+    };
+  }, [spread]);
 
   return (
     <>
@@ -87,7 +92,7 @@ export function Hearts({ x, y, spread }: { x: number; y: number; spread: number 
 function FloatHeart({ x, y, dx, delay }: { x: number; y: number; dx: number; delay: number }) {
   const p = useSharedValue(0);
   useEffect(() => {
-    p.value = withDelay(delay, withSequence(withTiming(0, { duration: 0 }), withTiming(1, { duration: 1100, easing: Easing.out(Easing.ease) })));
+    p.set(withDelay(delay, withSequence(withTiming(0, { duration: 0 }), withTiming(1, { duration: 1100, easing: Easing.out(Easing.ease) }))));
   }, [p, delay]);
   const st = useAnimatedStyle(() => ({
     opacity: 1 - p.value,

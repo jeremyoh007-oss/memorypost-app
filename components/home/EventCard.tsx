@@ -1,8 +1,6 @@
 import { DEV_TOOLS } from '@/lib/devFlags';
 import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, StyleSheet, View } from 'react-native';
-import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 import { IconTicket } from '@/components/Icons';
 import { Txt } from '@/components/Txt';
@@ -13,6 +11,7 @@ import { OUTFITS } from '@/data/outfits';
 import { iGa } from '@/lib/korean';
 import { arrive, openMail, openTravel } from '@/store/actions';
 import { useGame } from '@/store/game';
+import { C } from '@/theme/tokens';
 
 /** Special-event card: ticket → on trip (with dev "바로 도착") → postcard arrived. */
 export function EventCard() {
@@ -50,7 +49,7 @@ export function EventCard() {
   if (tickets > 0) {
     return (
       <Shell
-        thumb={<IconTicket size={34} />}
+        thumb={<IconTicket size={30} color={C.ink} />}
         small="특별 이벤트"
         title="여행 티켓이 도착했어요"
         sub="이번 주 안에 한 번, 어디든 보내 줄 수 있어요"
@@ -81,35 +80,25 @@ function Shell({
 }) {
   return (
     <View style={s.wrap}>
-      <LinearGradient colors={['#20314F', '#3A4E7A']} start={{ x: 0, y: 0.2 }} end={{ x: 1, y: 0.8 }} style={StyleSheet.absoluteFill} />
-      <Svg width={140} height={140} style={s.glow} pointerEvents="none">
-        <Defs>
-          <RadialGradient id="glow" cx="50%" cy="50%" r="50%">
-            <Stop offset="0" stopColor="#fff" stopOpacity={0.16} />
-            <Stop offset="0.7" stopColor="#fff" stopOpacity={0} />
-          </RadialGradient>
-        </Defs>
-        <Circle cx={70} cy={70} r={70} fill="url(#glow)" />
-      </Svg>
       <View style={s.thumb}>{thumb}</View>
       <View style={s.tx}>
-        <Txt w={600} size={11.5} color="rgba(255,255,255,0.75)" lh={1.4}>
+        <Txt w={600} size={11.5} color={C.ink3} lh={1.4}>
           {small}
         </Txt>
-        <Txt w={700} size={15} color="#fff" lh={1.35} style={{ marginTop: 1, marginBottom: 2 }}>
+        <Txt w={700} size={15} lh={1.35} style={{ marginTop: 1, marginBottom: 2 }}>
           {title}
         </Txt>
-        <Txt size={12} color="rgba(255,255,255,0.82)" lh={1.4}>
+        <Txt size={12.5} color={C.ink2} lh={1.4}>
           {sub}
         </Txt>
       </View>
       {onPress ? (
         <Pressable onPress={onPress} accessibilityRole="button" style={({ pressed }) => [s.go, pressed && { opacity: 0.85 }]}>
-          <Txt w={700} size={13} color="#20314F" lh={1.25} center>
+          <Txt w={600} size={13} color="#fff" lh={1.25} center>
             {cta}
           </Txt>
           {ctaSub ? (
-            <Txt w={500} size={10.5} color="rgba(32,49,79,0.7)" lh={1.25} center>
+            <Txt w={500} size={10.5} color="rgba(255,255,255,0.7)" lh={1.25} center>
               {ctaSub}
             </Txt>
           ) : null}
@@ -120,17 +109,16 @@ function Shell({
 }
 
 const s = StyleSheet.create({
-  wrap: { borderRadius: 22, padding: 16, flexDirection: 'row', gap: 14, alignItems: 'center', overflow: 'hidden' },
-  glow: { position: 'absolute', right: -30, top: -30 },
+  wrap: { borderRadius: 20, padding: 14, flexDirection: 'row', gap: 14, alignItems: 'center', overflow: 'hidden', backgroundColor: C.card },
   thumb: {
-    width: 60,
-    height: 60,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.12)',
+    width: 56,
+    height: 56,
+    borderRadius: 14,
+    backgroundColor: C.bg,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
   },
   tx: { flex: 1, minWidth: 0 },
-  go: { backgroundColor: '#fff', borderRadius: 999, paddingVertical: 8, paddingHorizontal: 14 },
+  go: { backgroundColor: C.ink, borderRadius: 999, paddingVertical: 9, paddingHorizontal: 16 },
 });

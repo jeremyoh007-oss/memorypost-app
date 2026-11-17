@@ -47,7 +47,7 @@ export const IconBowl = ({ size = 26, color }: P) => (
     <Path d="M9 9.5c0-1.4 1.2-1.8 1.2-3.2M13.5 9.5c0-1.4 1.2-1.8 1.2-3.2" />
   </Svg>
 );
-export const IconCheckBadge = ({ size = 14, bg = '#D9654B' }: { size?: number; bg?: string }) => (
+export const IconCheckBadge = ({ size = 14, bg = '#141414' }: { size?: number; bg?: string }) => (
   <Svg width={size} height={size} viewBox="0 0 14 14">
     <Circle cx={7} cy={7} r={7} fill={bg} />
     <Path d="m4 7.2 2 2 4-4.4" fill="none" stroke="#fff" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
@@ -68,8 +68,8 @@ export const IconClose = ({ size = 14, color = '#77706A' }: P) => (
     <Path d="m3 3 8 8M11 3l-8 8" />
   </Svg>
 );
-export const IconTicket = ({ size = 34 }: { size?: number }) => (
-  <Svg width={size} height={size} viewBox="0 0 34 34" fill="none" stroke="#fff" strokeWidth={1.7} strokeLinejoin="round">
+export const IconTicket = ({ size = 34, color = '#fff' }: { size?: number; color?: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 34 34" fill="none" stroke={color} strokeWidth={1.7} strokeLinejoin="round">
     <Path d="M4 11a2 2 0 0 1 2-2h22a2 2 0 0 1 2 2v3a3 3 0 0 0 0 6v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a3 3 0 0 0 0-6Z" />
     <Path d="M21 9v16" strokeDasharray="2 2.5" />
   </Svg>

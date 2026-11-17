@@ -5,14 +5,13 @@ import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTim
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, Path, Pattern, Polygon, Rect } from 'react-native-svg';
 
-import { Coin } from '@/components/Icons';
 import { Postcard } from '@/components/Postcard';
 import { Txt } from '@/components/Txt';
 import { Btn } from '@/components/ui';
 import { CH } from '@/data/characters';
 import { CITIES } from '@/data/cities';
 import { OUTFITS } from '@/data/outfits';
-import { doubleReward, keep } from '@/store/actions';
+import { keep } from '@/store/actions';
 import { cardKey, useGame } from '@/store/game';
 import { setUI, useUI } from '@/store/ui';
 import { C } from '@/theme/tokens';
@@ -25,13 +24,14 @@ export function MailOverlay() {
   const insets = useSafeAreaInsets();
   const [stage, setStage] = useState<'env' | 'opening' | 'card'>('env');
   const [flipped, setFlipped] = useState(false);
-
-  useEffect(() => {
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
     if (open) {
       setStage('env');
       setFlipped(false);
     }
-  }, [open]);
+  }
 
   if (!open || !arrived) return null;
   const c = CITIES[arrived.c];
@@ -94,19 +94,6 @@ export function MailOverlay() {
               </Txt>
             </View>
           ) : null}
-          <View style={s.reward}>
-            <Coin size={16} />
-            <Txt size={12.5} color="rgba(255,255,255,0.8)">
-              조개 {arrived.reward}개
-            </Txt>
-            {!arrived.doubled && (
-              <Pressable onPress={doubleReward} accessibilityRole="button" hitSlop={6}>
-                <Txt size={12.5} color="#fff" style={{ textDecorationLine: 'underline' }}>
-                  광고 보고 2배 받기
-                </Txt>
-              </Pressable>
-            )}
-          </View>
           <View style={s.actions}>
             <Btn title={flipped ? '앞면 보기' : '뒷면 보기'} variant="ghost" small style={{ flex: 1, width: undefined }} onPress={() => setFlipped((f) => !f)} />
             <Btn title="엽서함에 넣기" variant="white" small style={{ flex: 1, width: undefined }} onPress={keep} />
@@ -121,10 +108,10 @@ function Envelope({ opening, onPress }: { opening: boolean; onPress: () => void 
   const hover = useSharedValue(0);
   const flap = useSharedValue(0);
   useEffect(() => {
-    hover.value = withRepeat(withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.ease) }), -1, true);
+    hover.set(withRepeat(withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.ease) }), -1, true));
   }, [hover]);
   useEffect(() => {
-    if (opening) flap.value = withTiming(1, { duration: 500 });
+    if (opening) flap.set(withTiming(1, { duration: 500 }));
   }, [opening, flap]);
   const hoverSt = useAnimatedStyle(() => ({ transform: [{ translateY: -8 * hover.value }] }));
   const flapSt = useAnimatedStyle(() => ({ transform: [{ scaleY: 1 - 2 * flap.value }] }));
@@ -194,6 +181,5 @@ const s = StyleSheet.create({
     justifyContent: 'center',
   },
   places: { width: '100%', marginTop: 14, backgroundColor: '#fff', borderRadius: 16, paddingVertical: 12, paddingHorizontal: 14 },
-  reward: { flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center', marginTop: 12 },
   actions: { flexDirection: 'row', gap: 8, marginTop: 14 },
 });

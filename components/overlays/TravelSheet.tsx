@@ -7,7 +7,7 @@ import { Txt } from '@/components/Txt';
 import { Btn, Step } from '@/components/ui';
 import { CITIES, CITY_IDS, DURS, type TravelRegion } from '@/data/cities';
 import { IMAGES } from '@/data/images';
-import { OUTFITS, OUTFIT_IDS } from '@/data/outfits';
+import { hasOutfit, OUTFITS, OUTFIT_IDS } from '@/data/outfits';
 import { euro } from '@/lib/korean';
 import { outfitImage } from '@/lib/pet';
 import { send } from '@/store/actions';
@@ -38,10 +38,10 @@ export function TravelSheet() {
     >
       <Step>1. 옷 고르기</Step>
       <View style={s.wear}>
-        {OUTFIT_IDS.filter((o) => g.owned[o]).map((o) => (
+        {OUTFIT_IDS.filter((o) => hasOutfit(g.owned, g.lv, o)).map((o) => (
           <OutfitOption key={o} img={outfitImage(g.active, o)} name={OUTFITS[o].name} status="보유" selected={pick.wear === o} onPress={() => g.setPick({ wear: o })} />
         ))}
-        {Array.from({ length: Math.max(0, 4 - OUTFIT_IDS.filter((o) => g.owned[o]).length) }).map((_, i) => (
+        {Array.from({ length: Math.max(0, 4 - OUTFIT_IDS.filter((o) => hasOutfit(g.owned, g.lv, o)).length) }).map((_, i) => (
           <View key={`sp${i}`} style={{ flex: 1 }} />
         ))}
       </View>

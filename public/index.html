@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>%WEB_TITLE%</title>
     <meta name="description" content="매일 인사하는 반려 친구, 추억 우체국" />
-    <meta name="theme-color" content="#F7F5F1" />
+    <meta name="theme-color" content="#FFFFFF" />
     <!-- Installed to the home screen (PWA): name, icons and full-screen launch. -->
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -13,20 +13,23 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="추억 우체국" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <!-- Korean fonts: Google Fonts sends only the glyph ranges on screen (theme/tokens F on web). -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Korean fonts, split by glyph range so only what is on screen downloads (theme/tokens F on web):
+         Pretendard for the UI, Gowun Batang for postcard letters. -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300..700&display=swap"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" />
     <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
     <style id="expo-reset">
       /* These styles make the body full-height */
       html,
       body {
         height: 100%;
-        background-color: #f7f5f1;
+        background-color: #ffffff;
       }
       /* These styles disable body scrolling if you are using <ScrollView> */
       body {

@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { CHAR_ASPECT, IMAGES, type ImageKey } from '@/data/images';
 import { C } from '@/theme/tokens';
-import { Coin } from './Icons';
 import { Txt } from './Txt';
 
 /** One tile in a 4-column outfit row (travel sheet + wardrobe). */
@@ -11,7 +10,7 @@ export function OutfitOption({
   img,
   name,
   status,
-  price,
+  lock,
   selected,
   dim,
   onPress,
@@ -19,7 +18,8 @@ export function OutfitOption({
   img: ImageKey;
   name: string;
   status?: string;
-  price?: number;
+  /** Shown instead of the status while locked, e.g. "Lv.3". */
+  lock?: string;
   selected?: boolean;
   dim?: boolean;
   onPress?: () => void;
@@ -31,18 +31,9 @@ export function OutfitOption({
         {name}
       </Txt>
       <View style={s.st}>
-        {price !== undefined ? (
-          <>
-            <Coin size={11} />
-            <Txt size={11} color={C.ink3} lh={1.3}>
-              {price}
-            </Txt>
-          </>
-        ) : (
-          <Txt size={11} color={C.ink3} lh={1.3}>
-            {status}
-          </Txt>
-        )}
+        <Txt size={11} color={C.ink3} lh={1.3}>
+          {lock ?? status}
+        </Txt>
       </View>
     </Pressable>
   );

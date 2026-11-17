@@ -5,7 +5,7 @@ import { Sheet } from '@/components/Sheet';
 import { Txt } from '@/components/Txt';
 import { Step } from '@/components/ui';
 import type { Tod } from '@/data/tod';
-import { devAddTicket, devAway, devReset, devSetTod, toast } from '@/store/actions';
+import { devAddTicket, devAway, devReset, devSetTod } from '@/store/actions';
 import { useGame } from '@/store/game';
 import { setUI, useUI } from '@/store/ui';
 import { weatherProvider } from '@/services/weather';
@@ -17,7 +17,6 @@ export function DebugSheet() {
   const visible = useUI((s) => s.sheet === 'debug');
   const dev = useGame((s) => s.dev);
   const setDev = useGame((s) => s.setDev);
-  const set = useGame((s) => s.set);
   if (!DEV_TOOLS) return null;
   const close = () => setUI({ sheet: null });
   const tods: [Tod | null, string][] = [
@@ -52,13 +51,6 @@ export function DebugSheet() {
       <View style={s.row}>
         <Chip label={dev.sampleSchedule ? '예시 일정 끄기' : '예시 일정 켜기'} on={dev.sampleSchedule} onPress={() => setDev({ sampleSchedule: !dev.sampleSchedule })} />
         <Chip label="여행 티켓 +1" onPress={devAddTicket} />
-        <Chip
-          label="조개 +200"
-          onPress={() => {
-            set((g) => ({ coins: g.coins + 200 }));
-            toast('조개 200개를 받았어요');
-          }}
-        />
       </View>
       <View style={[s.row, { marginTop: 4 }]}>
         <Chip label="처음부터 다시" dashed onPress={devReset} />

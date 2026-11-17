@@ -6,14 +6,13 @@ import { router } from 'expo-router';
 
 import { CH, CHAR_IDS, NIGHT_PAT_LINES, PAT_LINES, type CharId } from '@/data/characters';
 import { CITIES, durOf } from '@/data/cities';
-import { OUTFITS, type OutfitId } from '@/data/outfits';
+import { hasOutfit, OUTFITS, OUTFIT_IDS, type OutfitId } from '@/data/outfits';
 import { regionName } from '@/data/regions';
 import { SAMPLE_EVENTS } from '@/data/samples';
 import { NIGHT_HELLO, TOD, type Tod } from '@/data/tod';
 import { eulReul, eunNeun, iGa } from '@/lib/korean';
 import type { Pose } from '@/lib/pet';
 import { dayKey, daysBetween, effectiveNow, hmToMin, minuteOfDay, realTod, spokenTime, weekKey } from '@/lib/time';
-import { rewardedAds } from '@/services/ads';
 import type { CalendarEvent } from '@/services/calendar';
 import { DUST_LABEL, rainLine, SKY_AND } from '@/services/weather';
 import { CARE_KEYS, cardKey, game, useGame, type CareKey, type GameData } from './game';
@@ -144,7 +143,8 @@ export function addBond(n: number) {
   if (bond >= 100) {
     bond -= 100;
     lv += 1;
-    toast(`친밀도 Lv.${lv}가 됐어요`);
+    const newOutfit = OUTFIT_IDS.find((o) => OUTFITS[o].lv === lv);
+    toast(newOutfit ? `친밀도 Lv.${lv} · 이제 ${eulReul(OUTFITS[newOutfit].name)} 입을 수 있어요` : `친밀도 Lv.${lv}가 됐어요`);
     CHAR_IDS.forEach((k) => {
       const c = CH[k];
       if (c.kind === 'bond' && c.need && lv >= c.need && !g.chars[k]) {
@@ -259,7 +259,7 @@ export const penguinDaysLeft = () => {
 export function openTravel() {
   const g = game();
   if (g.trip || g.arrived) return;
-  g.setPick({ wear: g.owned[g.outfit] && g.outfit !== 'none' ? g.outfit : 'beret' });
+  g.setPick({ wear: hasOutfit(g.owned, g.lv, g.outfit) && g.outfit !== 'none' ? g.outfit : 'beret' });
   setUI({ sheet: 'travel' });
 }
 
@@ -296,14 +296,6 @@ export function openMail() {
   setUI({ push: null, sheet: null, mailOpen: true });
 }
 
-export async function doubleReward() {
-  const a = game().arrived;
-  if (!a || a.doubled) return;
-  const ok = await rewardedAds.show();
-  const cur = game().arrived;
-  if (ok && cur && !cur.doubled) set({ arrived: { ...cur, reward: cur.reward * 2, doubled: true } });
-}
-
 export function keep() {
   const g = game();
   const t = g.arrived;
@@ -311,27 +303,16 @@ export function keep() {
   const card = { c: t.c, o: t.o, ch: t.ch };
   const isNew = !g.cards.some((x) => cardKey(x) === cardKey(card));
   const cards = isNew ? [...g.cards, card] : g.cards;
-  set({ cards, newCard: isNew ? card : g.newCard, coins: g.coins + t.reward, arrived: null });
+  set({ cards, newCard: isNew ? card : g.newCard, arrived: null });
   setUI({ mailOpen: false });
   const fox = CH.fox;
   if (fox.need && cards.length >= fox.need && !g.chars.fox) setTimeout(() => unlockChar('fox', '엽서 6종 모으기 달성'), 1600);
-  toast(`엽서함에 넣었어요 · 조개 +${t.reward}`);
+  toast('엽서함에 넣었어요');
   say(isNew ? '엽서 마음에 들어요? 다음엔 다른 옷 입고 갈래요' : '또 가도 좋았어요!');
   bounce('hop');
 }
 
 // ---------- wardrobe ----------
-export function buyOutfit(o: OutfitId) {
-  const g = game();
-  const it = OUTFITS[o];
-  if (g.coins < it.price) {
-    toast(`조개가 ${it.price - g.coins}개 모자라요. 여행 엽서로 모아요`);
-    return;
-  }
-  set({ coins: g.coins - it.price, owned: { ...g.owned, [o]: true } });
-  toast(`${eulReul(it.name)} 샀어요`);
-}
-
 export function wearOutfit(o: OutfitId) {
   if (game().trip) {
     toast('여행 중에는 옷을 갈아입힐 수 없어요');

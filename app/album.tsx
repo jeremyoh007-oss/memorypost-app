@@ -98,7 +98,7 @@ const s = StyleSheet.create({
   fill: { height: '100%', backgroundColor: C.ink, borderRadius: 6 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   slot: { borderRadius: 12, overflow: 'hidden', backgroundColor: '#fff', borderWidth: 1, borderColor: C.line },
-  locked: { backgroundColor: '#EFECE6', borderColor: '#EFECE6' },
+  locked: { backgroundColor: C.card, borderColor: C.card },
   new: { borderWidth: 2, borderColor: C.accent },
   lbl: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, paddingTop: 6, paddingHorizontal: 9, paddingBottom: 8 },
 });

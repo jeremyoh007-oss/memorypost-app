@@ -1,11 +1,12 @@
 // 추억 우체국 service worker: the app opens offline after the first visit.
 // - Pages and other plain files: network first, so a new deploy shows up on the next open; cached copy offline.
 // - Build files under /_expo/ and /assets/ have a content hash in their names: cache first.
-// - Google Fonts: cache first (the CSS is refreshed in the background).
+// - Fonts (jsDelivr Pretendard, Google Fonts): cache first (the CSS is refreshed in the background).
 // - Everything else on other hosts (the weather API) is left alone.
-const CACHE = 'memorypost-v1';
+const CACHE = 'memorypost-v2';
 const FONT_CSS = 'https://fonts.googleapis.com';
 const FONT_FILES = 'https://fonts.gstatic.com';
+const FONT_CDN = 'https://cdn.jsdelivr.net';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => {
@@ -42,6 +43,7 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
 
   if (url.origin === FONT_FILES) return e.respondWith(cacheFirst(req));
+  if (url.origin === FONT_CDN) return e.respondWith(url.pathname.endsWith('.css') ? staleWhileRevalidate(req) : cacheFirst(req));
   if (url.origin === FONT_CSS) return e.respondWith(staleWhileRevalidate(req));
   if (url.origin !== location.origin) return;
 

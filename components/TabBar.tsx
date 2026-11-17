@@ -24,7 +24,7 @@ export function TabBar({ state, navigateToTab, insets }: BottomTabBarProps) {
   return (
     <View style={[s.bar, { paddingBottom: bottom }]}>
       {Platform.OS !== 'android' ? <BlurView intensity={60} tint="light" style={StyleSheet.absoluteFill} /> : null}
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: Platform.OS === 'android' ? 'rgba(250,249,246,0.97)' : C.tabBar }]} />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: Platform.OS === 'android' ? 'rgba(255,255,255,0.97)' : C.tabBar }]} />
       {state.routes.map((route, i) => {
         const t = TABS[route.name];
         if (!t) return null;
@@ -76,6 +76,6 @@ const s = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: C.accent,
     borderWidth: 1.5,
-    borderColor: '#FAF9F6',
+    borderColor: '#FFFFFF',
   },
 });

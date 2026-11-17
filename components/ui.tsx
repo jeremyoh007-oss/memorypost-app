@@ -1,9 +1,8 @@
-/** Small shared building blocks: Card, Btn, Coins pill, section header, screen header. */
+/** Small shared building blocks: Card, Btn, section header, screen header. */
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { C, cardShadow } from '@/theme/tokens';
-import { Coin } from './Icons';
 import { Txt } from './Txt';
 
 export function Card({ children, onPress, style, label }: { children: ReactNode; onPress?: () => void; style?: StyleProp<ViewStyle>; label?: string }) {
@@ -51,8 +50,9 @@ export function Btn({
   style?: StyleProp<ViewStyle>;
   small?: boolean;
 }) {
-  const bg = variant === 'dark' ? C.ink : variant === 'white' ? '#fff' : variant === 'ghost' ? 'rgba(255,255,255,0.14)' : '#fff';
-  const fg = variant === 'dark' || variant === 'ghost' ? '#fff' : C.ink;
+  const quiet = disabled && variant === 'dark';
+  const bg = quiet ? C.card : variant === 'dark' ? C.ink : variant === 'white' ? '#fff' : variant === 'ghost' ? 'rgba(255,255,255,0.14)' : '#fff';
+  const fg = quiet ? C.ink3 : variant === 'dark' || variant === 'ghost' ? '#fff' : C.ink;
   return (
     <Pressable
       accessibilityRole="button"
@@ -62,7 +62,7 @@ export function Btn({
         s.btn,
         { backgroundColor: bg, paddingVertical: small ? 13 : 15 },
         variant === 'light' && { borderWidth: 1, borderColor: C.line },
-        disabled && { opacity: 0.55 },
+        disabled && !quiet && { opacity: 0.55 },
         pressed && { transform: [{ scale: 0.98 }] },
         style,
       ]}
@@ -71,17 +71,6 @@ export function Btn({
         {title}
       </Txt>
     </Pressable>
-  );
-}
-
-export function CoinsPill({ value }: { value: number }) {
-  return (
-    <View style={s.coins}>
-      <Coin size={16} />
-      <Txt w={600} size={13} tabular>
-        {value}
-      </Txt>
-    </View>
   );
 }
 
@@ -127,18 +116,6 @@ const s = StyleSheet.create({
   card: { backgroundColor: C.card, borderRadius: 20, padding: 16, ...cardShadow },
   lab: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   btn: { width: '100%', borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
-  coins: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: '#fff',
-    borderRadius: 999,
-    paddingVertical: 4,
-    paddingLeft: 6,
-    paddingRight: 10,
-    borderWidth: 1,
-    borderColor: C.line,
-  },
   secH: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 2, marginHorizontal: 4 },
   titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
 });

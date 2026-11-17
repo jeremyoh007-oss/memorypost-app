@@ -46,7 +46,7 @@ Optional env (copy `.env.example` → `.env`, git-ignored):
 ### Dev menu
 
 Long-press the date on Home (dev builds only) to: force time of day (자동/아침/오후/밤), simulate
-being away 1/2/4 days, toggle the prototype's sample schedule, add a travel ticket or 200 조개, and reset.
+being away 1/2/4 days, toggle the prototype's sample schedule, add a travel ticket, and reset.
 On a trip, the event card has a "바로 도착" button (dev only).
 
 ## Architecture
@@ -70,9 +70,9 @@ services/            interfaces with mock implementations
   weather.ts         WeatherProvider → MockWeather | KmaProxyWeather (EXPO_PUBLIC_WEATHER_URL)
   calendar.ts        expo-calendar: permission + today's events, on device only
   purchases.ts       PurchaseService → MockPurchases (RevenueCat later)
-  ads.ts             RewardedAds → MockRewardedAds (3-second placeholder)
+  ads.ts             RewardedAds → MockRewardedAds (unused since the white redesign: no rewards to double)
 lib/                 Korean particles (이/가, 을/를, 은/는, 으로/로), time helpers, pet image resolver, dev flag
-theme/tokens.ts      colors/fonts from the prototype CSS (#F7F5F1, #1C1A17, accent #D9654B, Noto Sans KR, Gowun Batang)
+theme/tokens.ts      white design: #FFFFFF page, #F5F5F3 flat cards, ink #141414 as the only accent; Pretendard on web, Noto Sans KR on device, Gowun Batang for letters
 server/weather-proxy Cloudflare Worker for 기상청 단기예보 (see its README)
 docs/screens/        Playwright screenshots of the web build (390×844)
 scripts/             serve-dist.js + screenshots.js used to produce docs/screens
@@ -101,7 +101,7 @@ so wardrobe, travel and postcards work for all five.
 | Weather | Mock sample by default. Real 기상청 data via the Worker when `EXPO_PUBLIC_WEATHER_URL` is set. 미세먼지 is sample only (KMA has no dust). |
 | Calendar | Real on device (expo-calendar, read-only, today only, never uploaded). Web/denied → note. Sample schedule via dev menu. |
 | Purchases | Mock (`MockPurchases`), nothing charged. |
-| Rewarded ad ("광고 보고 2배") | Placeholder overlay, no ad SDK. |
+| Rewarded ad | Removed from the UI with the in-game shells (2026-11 redesign). |
 | Push notifications | In-app banner only (arrival, "보고 싶어요"). |
 | Places on postcard backs | Static samples (한국관광공사 TourAPI later). |
 
@@ -111,5 +111,5 @@ so wardrobe, travel and postcards work for all five.
 2. Local notifications (expo-notifications): trip arrival, day-2/day-4 "보고 싶어요", quiet hours 21–08.
 3. Deploy the weather Worker; add 초단기실황 for current temp and 에어코리아 for 미세먼지.
 4. Fresh-start seed for release (Lv.1, no cards), onboarding (name the pet, pick region, calendar permission prompt).
-5. Rewarded ads SDK behind `services/ads.ts` (max 4/day), TourAPI for places.
+5. TourAPI for places.
 6. Tests for `store/actions.ts` flows, `npx expo lint`, EAS build profiles, app icon/splash art.

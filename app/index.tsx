@@ -49,11 +49,8 @@ export default function Home() {
 const s = StyleSheet.create({
   root: { flex: 1, backgroundColor: C.bg },
   panel: {
-    marginTop: -26,
     backgroundColor: C.bg,
-    borderTopLeftRadius: 26,
-    borderTopRightRadius: 26,
-    paddingTop: 18,
+    paddingTop: 8,
     paddingHorizontal: 16,
     gap: 12,
     zIndex: 3,

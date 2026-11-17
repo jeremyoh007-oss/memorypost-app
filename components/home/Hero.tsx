@@ -1,6 +1,5 @@
 import { DEV_TOOLS } from '@/lib/devFlags';
 import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -23,7 +22,7 @@ import { BondPill } from './BondRing';
 import { Bubble } from './Bubble';
 import { Hearts, Pet } from './Pet';
 
-export const HERO_H = 452;
+export const HERO_H = 400;
 
 /** The room: greeting, date, brief, bond ring, and the pet (or the "on a trip" card). */
 export function Hero({ tod, now, minute }: { tod: Tod; now: number; minute: number }) {
@@ -39,7 +38,7 @@ export function Hero({ tod, now, minute }: { tod: Tod; now: number; minute: numb
   const night = tod === 'night';
 
   const W = Math.min(width, 520);
-  const petW = W * 0.48;
+  const petW = W * 0.44;
   const petH = petW * (635 / 470);
   const pose: Pose = tempPose ?? (sad ? 'sad' : night ? 'sleep' : 'idle');
   const img = poseImage(g.active, pose, g.outfit);
@@ -56,29 +55,21 @@ export function Hero({ tod, now, minute }: { tod: Tod; now: number; minute: numb
   const ch = CH[g.active];
 
   return (
-    <View style={[s.hero, { height: HERO_H + Math.max(0, top - 56) }]}>
-      <Image source={IMAGES.bg_room} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '28%' }} transition={0} />
-      <LinearGradient
-        pointerEvents="none"
-        colors={night ? ['rgba(18,22,52,0.6)', 'rgba(18,22,52,0)'] : ['rgba(247,245,241,0.96)', 'rgba(247,245,241,0.75)', 'rgba(247,245,241,0)']}
-        locations={night ? [0, 1] : [0, 0.55, 1]}
-        style={[s.topFade, { height: 170 + Math.max(0, top - 56) }]}
-      />
-      {night && <LinearGradient pointerEvents="none" colors={['rgba(18,22,52,0.55)', 'rgba(30,30,70,0.35)']} style={StyleSheet.absoluteFill} />}
+    <View style={[s.hero, { height: HERO_H + Math.max(0, top - 56), backgroundColor: night ? C.night : C.bg }]}>
 
       <View style={[s.hello, { top }]}>
         <View style={s.helloRow}>
           <View style={{ flexShrink: 1 }}>
             <Pressable onLongPress={onLongPressDate} delayLongPress={600} accessibilityHint={DEV_TOOLS ? '길게 누르면 개발자 메뉴가 열려요' : undefined}>
-              <Txt w={500} size={13} color={night ? 'rgba(255,255,255,0.75)' : C.ink2}>
+              <Txt w={500} size={13} color={night ? 'rgba(255,255,255,0.6)' : C.ink3}>
                 {dateLabel(now)}
               </Txt>
             </Pressable>
-            <Txt w={700} size={24} lh={1.3} ls={-0.03} color={night ? '#fff' : C.ink} style={{ marginTop: 2 }}>
+            <Txt w={700} size={26} lh={1.3} ls={-0.03} color={night ? '#fff' : C.ink} style={{ marginTop: 2 }}>
               {TOD[tod].greet}
             </Txt>
           </View>
-          <BondPill lv={g.lv} bond={g.bond} days={days} onPress={bondInfo} />
+          <BondPill lv={g.lv} bond={g.bond} days={days} night={night} onPress={bondInfo} />
         </View>
         <View style={s.brief}>
           {weather && briefTemp !== null ? (
@@ -127,8 +118,7 @@ export function Hero({ tod, now, minute }: { tod: Tod; now: number; minute: numb
 }
 
 const s = StyleSheet.create({
-  hero: { position: 'relative', overflow: 'hidden', backgroundColor: '#E9E1D4' },
-  topFade: { position: 'absolute', left: 0, right: 0, top: 0 },
+  hero: { position: 'relative', overflow: 'hidden' },
   hello: { position: 'absolute', left: 22, right: 22, zIndex: 3 },
   helloRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 },
   brief: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
@@ -137,17 +127,12 @@ const s = StyleSheet.create({
   awayWrap: { position: 'absolute', left: 0, right: 0, bottom: 70, alignItems: 'center', zIndex: 3 },
   away: {
     width: '72%',
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: C.card,
     borderRadius: 22,
     paddingVertical: 14,
     paddingHorizontal: 16,
     flexDirection: 'row',
     gap: 12,
     alignItems: 'center',
-    shadowColor: '#281E14',
-    shadowOpacity: 0.16,
-    shadowRadius: 15,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 6,
   },
 });
