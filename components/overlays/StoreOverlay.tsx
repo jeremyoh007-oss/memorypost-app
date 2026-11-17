@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -17,7 +17,12 @@ export function StoreOverlay() {
   const k = useUI((s) => s.storeFor);
   const insets = useSafeAreaInsets();
   const [busy, setBusy] = useState(false);
-  useEffect(() => setBusy(false), [k]);
+  // A new sheet (another friend) starts idle — reset during render instead of in an effect
+  const [shownFor, setShownFor] = useState(k);
+  if (k !== shownFor) {
+    setShownFor(k);
+    setBusy(false);
+  }
   if (!k) return null;
   const c = CH[k];
   const limited = c.kind === 'limited';
@@ -68,5 +73,5 @@ const s = StyleSheet.create({
   bg: { backgroundColor: 'rgba(20,18,15,0.45)', justifyContent: 'flex-end', paddingHorizontal: 10 },
   box: { width: '100%', backgroundColor: '#fff', borderRadius: 24, paddingTop: 16, paddingHorizontal: 16, paddingBottom: 14 },
   row: { flexDirection: 'row', gap: 12, alignItems: 'center', paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: C.line },
-  img: { width: 52, height: 52, backgroundColor: '#F3EEE6', borderRadius: 12 },
+  img: { width: 52, height: 52, backgroundColor: C.card, borderRadius: 12 },
 });

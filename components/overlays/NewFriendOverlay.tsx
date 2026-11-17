@@ -12,6 +12,7 @@ import { CHAR_ASPECT, IMAGES } from '@/data/images';
 import { switchCharAndGoHome } from '@/store/actions';
 import { game } from '@/store/game';
 import { setUI, useUI } from '@/store/ui';
+import { C } from '@/theme/tokens';
 
 const RAYS = (() => {
   // repeating-conic-gradient(rgba(255,255,255,.07) 0 8deg, transparent 8deg 22deg)
@@ -39,10 +40,10 @@ export function NewFriendOverlay() {
 
   useEffect(() => {
     if (!nf) return;
-    spin.value = 0;
-    spin.value = withRepeat(withTiming(360, { duration: 18000, easing: Easing.linear }), -1, false);
-    pop.value = 0;
-    pop.value = withTiming(1, { duration: 700, easing: Easing.bezier(0.2, 1.5, 0.4, 1) });
+    spin.set(0);
+    spin.set(withRepeat(withTiming(360, { duration: 18000, easing: Easing.linear }), -1, false));
+    pop.set(0);
+    pop.set(withTiming(1, { duration: 700, easing: Easing.bezier(0.2, 1.5, 0.4, 1) }));
   }, [nf, spin, pop]);
 
   const raysSt = useAnimatedStyle(() => ({ transform: [{ rotate: `${spin.value}deg` }] }));
@@ -58,12 +59,12 @@ export function NewFriendOverlay() {
   const cy = height * 0.42;
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: '#151A2E' }]}>
+    <View style={[StyleSheet.absoluteFill, { backgroundColor: C.night }]}>
       <Svg style={StyleSheet.absoluteFill} width={width} height={height}>
         <Defs>
           <RadialGradient id="nfbg" cx={cx} cy={cy} r={Math.max(width, height) * 0.7} gradientUnits="userSpaceOnUse">
-            <Stop offset="0" stopColor="#3B4A78" />
-            <Stop offset="0.7" stopColor="#151A2E" />
+            <Stop offset="0" stopColor="#2C2D33" />
+            <Stop offset="0.7" stopColor={C.night} />
           </RadialGradient>
         </Defs>
         <Rect x={0} y={0} width={width} height={height} fill="url(#nfbg)" />
@@ -71,7 +72,7 @@ export function NewFriendOverlay() {
       <Animated.View pointerEvents="none" style={[{ position: 'absolute', left: cx - 640, top: cy - 640, width: 1280, height: 1280 }, raysSt]}>
         <Svg width={1280} height={1280} viewBox="-640 -640 1280 1280">
           <G>
-            <Path d={RAYS} fill="rgba(255,255,255,0.07)" />
+            <Path d={RAYS} fill="rgba(255,255,255,0.05)" />
           </G>
         </Svg>
       </Animated.View>

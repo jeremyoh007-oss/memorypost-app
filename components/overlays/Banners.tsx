@@ -9,13 +9,14 @@ import { IMAGES } from '@/data/images';
 import { openMail } from '@/store/actions';
 import { game } from '@/store/game';
 import { setUI, useUI } from '@/store/ui';
+import { C } from '@/theme/tokens';
 
 /** Bottom toast pill (above the tab bar). */
 export function Toast() {
   const t = useUI((s) => s.toast);
   const p = useSharedValue(0);
   useEffect(() => {
-    p.value = withTiming(t ? 1 : 0, { duration: 250 });
+    p.set(withTiming(t ? 1 : 0, { duration: 250 }));
   }, [t, p]);
   const st = useAnimatedStyle(() => ({ opacity: p.value, transform: [{ translateY: 8 * (1 - p.value) }] }));
   if (!t) return null;
@@ -36,7 +37,7 @@ export function PushBanner() {
   const insets = useSafeAreaInsets();
   const p = useSharedValue(0);
   useEffect(() => {
-    p.value = withTiming(push ? 1 : 0, { duration: 400, easing: Easing.bezier(0.2, 0.9, 0.3, 1.1) });
+    p.set(withTiming(push ? 1 : 0, { duration: 400, easing: Easing.bezier(0.2, 0.9, 0.3, 1.1) }));
   }, [push, p]);
   const st = useAnimatedStyle(() => ({ transform: [{ translateY: (1 - p.value) * -160 }] }));
   if (!push) return null;
@@ -86,7 +87,7 @@ const s = StyleSheet.create({
     shadowOffset: { width: 0, height: 14 },
     elevation: 10,
   },
-  appicon: { width: 38, height: 38, borderRadius: 10, overflow: 'hidden', backgroundColor: '#F3E9DC' },
+  appicon: { width: 38, height: 38, borderRadius: 10, overflow: 'hidden', backgroundColor: C.card },
   appiconImg: { position: 'absolute', width: 57, height: 77, left: -9.5, top: -4 },
   pushTop: { flexDirection: 'row', justifyContent: 'space-between' },
 });

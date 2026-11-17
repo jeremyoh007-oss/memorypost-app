@@ -1,5 +1,4 @@
 import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated';
@@ -23,12 +22,12 @@ export function DepartOverlay() {
 
   useEffect(() => {
     if (!trip) return;
-    stamp.value = 0;
-    walk.value = 0;
-    bob.value = 0;
-    stamp.value = withDelay(300, withTiming(1, { duration: 450, easing: Easing.bezier(0.3, 1.5, 0.5, 1) }));
-    walk.value = withDelay(1000, withTiming(1, { duration: 2400, easing: Easing.in(Easing.ease) }));
-    bob.value = withRepeat(withTiming(1, { duration: 360, easing: Easing.inOut(Easing.ease) }), -1, true);
+    stamp.set(0);
+    walk.set(0);
+    bob.set(0);
+    stamp.set(withDelay(300, withTiming(1, { duration: 450, easing: Easing.bezier(0.3, 1.5, 0.5, 1) })));
+    walk.set(withDelay(1000, withTiming(1, { duration: 2400, easing: Easing.in(Easing.ease) })));
+    bob.set(withRepeat(withTiming(1, { duration: 360, easing: Easing.inOut(Easing.ease) }), -1, true));
   }, [trip, stamp, walk, bob]);
 
   const walkerW = width * 0.56;
@@ -40,12 +39,12 @@ export function DepartOverlay() {
   const c = CITIES[trip.c];
   return (
     <View style={StyleSheet.absoluteFill}>
-      <LinearGradient colors={['#CFE3F3', '#F4EEE4']} style={StyleSheet.absoluteFill} />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: C.bg }]} />
       <Svg width={width} height={height * 0.36} viewBox="0 0 360 200" preserveAspectRatio="none" style={{ position: 'absolute', top: height * 0.12, left: 0 }}>
-        <Path d="M-10 170C80 140 120 40 220 60S330 30 380 10" fill="none" stroke="#fff" strokeWidth={2.5} strokeDasharray="6 8" />
+        <Path d="M-10 170C80 140 120 40 220 60S330 30 380 10" fill="none" stroke={C.grab} strokeWidth={2} strokeDasharray="6 8" />
       </Svg>
       <Animated.View style={[s.pm, { top: height * 0.14, right: width * 0.1 }, stampSt]}>
-        <Txt w={700} size={12} lh={1.25} color={C.accent} center>
+        <Txt w={700} size={12} lh={1.25} color={C.ink} center>
           {`출발\n${c.name}`}
         </Txt>
       </Animated.View>
@@ -74,7 +73,7 @@ const s = StyleSheet.create({
     height: 84,
     borderRadius: 42,
     borderWidth: 2,
-    borderColor: 'rgba(217,101,75,0.8)',
+    borderColor: C.ink,
     alignItems: 'center',
     justifyContent: 'center',
   },
