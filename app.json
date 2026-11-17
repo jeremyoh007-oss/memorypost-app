@@ -46,7 +46,8 @@
         {
           "calendarPermission": "오늘 일정을 기기 안에서만 읽어 홈 화면에 보여 드려요. 일정은 어디에도 전송하지 않아요."
         }
-      ]
+      ],
+      "expo-status-bar"
     ],
     "scheme": "memorypost",
     "backgroundColor": "#F7F5F1",

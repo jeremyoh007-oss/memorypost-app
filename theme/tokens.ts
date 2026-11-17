@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 /** Design tokens ported from the prototype's CSS custom properties (--a-*). The app is light-only. */
 export const C = {
   bg: '#F7F5F1',
@@ -20,14 +22,20 @@ export const C = {
   paperBack: '#FBF7EF',
 } as const;
 
+const WEB = Platform.OS === 'web';
+
+/**
+ * Font families. On device: one bundled file per weight (lib/fonts.ts). On web: the Google Fonts
+ * families from public/index.html, with the weight set by `Txt` (fontWeight).
+ */
 export const F = {
-  light: 'NotoSansKR_300Light',
-  regular: 'NotoSansKR_400Regular',
-  medium: 'NotoSansKR_500Medium',
-  semibold: 'NotoSansKR_600SemiBold',
-  bold: 'NotoSansKR_700Bold',
-  letter: 'GowunBatang_400Regular',
-  letterBold: 'GowunBatang_700Bold',
+  light: WEB ? 'Noto Sans KR' : 'NotoSansKR_300Light',
+  regular: WEB ? 'Noto Sans KR' : 'NotoSansKR_400Regular',
+  medium: WEB ? 'Noto Sans KR' : 'NotoSansKR_500Medium',
+  semibold: WEB ? 'Noto Sans KR' : 'NotoSansKR_600SemiBold',
+  bold: WEB ? 'Noto Sans KR' : 'NotoSansKR_700Bold',
+  letter: WEB ? 'Gowun Batang' : 'GowunBatang_400Regular',
+  letterBold: WEB ? 'Gowun Batang' : 'GowunBatang_700Bold',
 } as const;
 
 export type Weight = 300 | 400 | 500 | 600 | 700;

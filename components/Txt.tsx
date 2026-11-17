@@ -25,8 +25,8 @@ export function Txt({ w = 400, size = 15, color = C.ink, lh = 1.45, ls = -0.01, 
     textAlign: center ? 'center' : undefined,
     fontVariant: tabular ? ['tabular-nums'] : undefined,
     ...(Platform.OS === 'android' ? { includeFontPadding: false } : null),
-    // Korean word wrapping (CSS word-break: keep-all) on web.
-    ...(Platform.OS === 'web' ? ({ wordBreak: 'keep-all' } as TextStyle) : null),
+    // Korean word wrapping (CSS word-break: keep-all) on web; the weight picks the Google Fonts face.
+    ...(Platform.OS === 'web' ? ({ wordBreak: 'keep-all', fontWeight: String(w) } as TextStyle) : null),
   };
   return <Text lineBreakStrategyIOS="hangul-word" {...rest} style={[base, style]} />;
 }

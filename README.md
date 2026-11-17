@@ -18,8 +18,23 @@ npx expo export --platform web   # static web build → dist/
 ```
 
 `expo-calendar` is a native module: device calendars work in a development build
-(`npx expo run:android` / `eas build --profile development`). In Expo Go or on web the schedule card
-shows a short note instead.
+(`npx expo run:android` / `eas build --profile development`). In Expo Go the schedule card shows a short
+note instead; on web it is left out, and the greeting talks about the weather rather than the schedule.
+
+## Web app (PWA)
+
+The same code is published as a web app that installs to the home screen ("홈 화면에 추가").
+
+- Build: `npm run export:web` → `dist/` (about 5 MB). `.env.production` sets the weather proxy URL.
+- Host: Cloudflare Pages, connected to this repo. Build command `npm run export:web`, output `dist`,
+  Node from `.node-version`. Unknown paths fall back to `index.html` (no `404.html`).
+- `public/` is copied as is: `index.html` (template: manifest, icons, Google Fonts, service worker
+  registration), `manifest.json`, icons made from `pet_happy.webp`, `sw.js`, `_headers` (cache rules).
+- Fonts: the native app bundles the TTFs (`lib/fonts.ts`); web loads Google Fonts instead
+  (`lib/fonts.web.ts`, `F` in `theme/tokens.ts`), so only the Korean glyphs on screen are downloaded.
+- Offline: `sw.js` keeps the page, the hashed build files and the fonts, so the app opens without a
+  connection after the first visit. Weather requests are not cached by the service worker.
+- Saved game lives in the browser's localStorage (`memorypost-v1`); the page asks for persistent storage.
 
 Optional env (copy `.env.example` → `.env`, git-ignored):
 

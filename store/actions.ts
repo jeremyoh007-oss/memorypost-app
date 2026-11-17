@@ -28,6 +28,8 @@ export const currentMinute = () => {
 };
 export const scheduleEvents = (): CalendarEvent[] => (game().dev.sampleSchedule ? SAMPLE_EVENTS : ui().events);
 export const nextEvent = (events = scheduleEvents(), min = currentMinute()) => events.find((e) => hmToMin(e.start) >= min);
+/** True when today's schedule was actually read (device calendar, or the dev sample). Web and denied → false. */
+export const scheduleKnown = () => game().dev.sampleSchedule || ui().calStatus === 'granted';
 
 const set = (patch: Partial<GameData> | ((s: GameData) => Partial<GameData>)) => game().set(patch);
 
@@ -80,6 +82,9 @@ export function helloLine(tod: Tod = currentTod()): string {
   if (tod === 'morning') {
     if (!w) return '좋은 아침! 오늘도 잘 부탁해요';
     return `좋은 아침! 오늘 ${eunNeun(regionName(game().weatherRegion))} ${SKY_AND[w.sky]} ${w.temp}도래요`;
+  }
+  if (!scheduleKnown()) {
+    return w ? `어서 와! 지금 ${eunNeun(regionName(game().weatherRegion))} ${SKY_AND[w.sky]} ${w.temp}도래요` : '어서 와! 오늘도 반가워요';
   }
   const nx = nextEvent();
   return nx ? `어서 와! ${spokenTime(hmToMin(nx.start))}에 ${nx.title} 있어요` : '어서 와! 오늘은 남은 일정이 없어요';

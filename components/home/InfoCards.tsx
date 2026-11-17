@@ -1,10 +1,10 @@
 import { Image } from 'expo-image';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { IconChevron, IconChevronDown, SkyIcon } from '@/components/Icons';
 import { Txt } from '@/components/Txt';
 import { Card, CardLabel } from '@/components/ui';
-import { CITIES } from '@/data/cities';
+import { CITIES, CITY_IDS } from '@/data/cities';
 import { IMAGES } from '@/data/images';
 import { regionName } from '@/data/regions';
 import { hmToMin } from '@/lib/time';
@@ -15,7 +15,6 @@ import { DUST_LABEL, rainSub, SKY_LABEL } from '@/services/weather';
 import type { CalendarEvent } from '@/services/calendar';
 import { C } from '@/theme/tokens';
 import { router } from 'expo-router';
-import { CITY_IDS } from '@/data/cities';
 import { OUTFIT_IDS } from '@/data/outfits';
 
 const isNightHour = (h: number) => h >= 19 || h < 6;
@@ -109,6 +108,8 @@ export function MiniCards() {
 
 export function ScheduleCard({ events, minute, sample }: { events: CalendarEvent[]; minute: number; sample: boolean }) {
   const status = useUI((s) => s.calStatus);
+  // A browser can't read the phone's calendar, so the web app leaves the card out.
+  if (Platform.OS === 'web' && !sample) return null;
   let note: string | null = null;
   if (!sample) {
     if (status === 'denied') note = '캘린더 접근을 허용하지 않아서 일정을 숨겼어요. 설정에서 허용하면 여기에 보여 드려요.';

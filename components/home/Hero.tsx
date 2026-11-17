@@ -14,7 +14,7 @@ import { TOD, type Tod } from '@/data/tod';
 import { eulReul } from '@/lib/korean';
 import { outfitImage, poseImage, type Pose } from '@/lib/pet';
 import { dateLabel, daysBetween, dayKey, remainLabel } from '@/lib/time';
-import { bondInfo, nextEvent, nowMs, petTap, scheduleEvents } from '@/store/actions';
+import { bondInfo, nextEvent, nowMs, petTap, scheduleEvents, scheduleKnown } from '@/store/actions';
 import { useGame } from '@/store/game';
 import { setUI, useUI } from '@/store/ui';
 import { SKY_LABEL } from '@/services/weather';
@@ -35,6 +35,7 @@ export function Hero({ tod, now, minute }: { tod: Tod; now: number; minute: numb
   const sad = useUI((s) => s.sad);
   const weather = useUI((s) => s.weather);
   useUI((s) => s.events); // re-render when the calendar loads
+  useUI((s) => s.calStatus);
   const night = tod === 'night';
 
   const W = Math.min(width, 520);
@@ -45,6 +46,7 @@ export function Hero({ tod, now, minute }: { tod: Tod; now: number; minute: numb
   const bubbleBottom = 34 + petH * (HEAD[img] ?? 0.8) + 10;
   const days = daysBetween(g.startedDay, dayKey(now)) + 1;
 
+  const known = scheduleKnown();
   const nx = nextEvent(scheduleEvents(), minute);
   const briefTemp = weather ? (night ? weather.nightTemp ?? weather.temp : weather.temp) : null;
   const top = Math.max(insets.top, 20) + 8;
@@ -85,12 +87,14 @@ export function Hero({ tod, now, minute }: { tod: Tod; now: number; minute: numb
               <Txt w={500} size={13} color={night ? 'rgba(255,255,255,0.9)' : C.ink}>
                 {briefTemp}° {SKY_LABEL[weather.sky]}
               </Txt>
-              <View style={[s.dot, { backgroundColor: night ? '#fff' : C.ink }]} />
+              {known && <View style={[s.dot, { backgroundColor: night ? '#fff' : C.ink }]} />}
             </>
           ) : null}
-          <Txt w={500} size={13} color={night ? 'rgba(255,255,255,0.9)' : C.ink} numberOfLines={1} style={{ flexShrink: 1 }}>
-            {nx ? `${nx.start} ${nx.title}` : '남은 일정 없음'}
-          </Txt>
+          {known && (
+            <Txt w={500} size={13} color={night ? 'rgba(255,255,255,0.9)' : C.ink} numberOfLines={1} style={{ flexShrink: 1 }}>
+              {nx ? `${nx.start} ${nx.title}` : '남은 일정 없음'}
+            </Txt>
+          )}
         </View>
       </View>
 

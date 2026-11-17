@@ -1,47 +1,29 @@
-import { GowunBatang_400Regular, GowunBatang_700Bold } from '@expo-google-fonts/gowun-batang';
-import {
-  NotoSansKR_300Light,
-  NotoSansKR_400Regular,
-  NotoSansKR_500Medium,
-  NotoSansKR_600SemiBold,
-  NotoSansKR_700Bold,
-} from '@expo-google-fonts/noto-sans-kr';
 import { useFonts } from 'expo-font';
 import { Tabs } from 'expo-router/js-tabs';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { OverlayHost } from '@/components/overlays/OverlayHost';
 import { TabBar } from '@/components/TabBar';
 import { useInfoLoader } from '@/hooks/useInfo';
+import { APP_FONTS } from '@/lib/fonts';
 import { checkIn, tickTrip } from '@/store/actions';
 import { useGame } from '@/store/game';
 import { C } from '@/theme/tokens';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
+const subscribeHydration = (cb: () => void) => useGame.persist.onFinishHydration(cb);
+const hasHydrated = () => useGame.persist.hasHydrated();
+
 function useHydrated() {
-  const [ok, setOk] = useState(() => useGame.persist.hasHydrated());
-  useEffect(() => {
-    const unsub = useGame.persist.onFinishHydration(() => setOk(true));
-    setOk(useGame.persist.hasHydrated());
-    return unsub;
-  }, []);
-  return ok;
+  return useSyncExternalStore(subscribeHydration, hasHydrated);
 }
 
 export default function RootLayout() {
-  const [fontsLoaded, fontError] = useFonts({
-    NotoSansKR_300Light,
-    NotoSansKR_400Regular,
-    NotoSansKR_500Medium,
-    NotoSansKR_600SemiBold,
-    NotoSansKR_700Bold,
-    GowunBatang_400Regular,
-    GowunBatang_700Bold,
-  });
+  const [fontsLoaded, fontError] = useFonts(APP_FONTS);
   const hydrated = useHydrated();
   const ready = (fontsLoaded || !!fontError) && hydrated;
   useInfoLoader(ready);

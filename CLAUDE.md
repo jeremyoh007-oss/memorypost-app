@@ -23,9 +23,12 @@
 | 금지 | 뽑기(가챠), 걷기·건강 기능, GPS |
 | 결제 | 프로토타입은 더미("결제 중… → 구매 완료! → 이제 같이 해 봐요!") |
 
-## 현재 상태 (2026-10-25)
+## 현재 상태 (2026-11-17)
 | 구분 | 상태 |
 |---|---|
+| 방향 | **웹앱(PWA)으로 운영**(2026-11-17 jeremy 결정: 폰 앱이 자꾸 튕김). 같은 코드, 폰 앱 빌드는 멈춤. 자세한 구조는 README "Web app (PWA)" |
+| 웹 배포 | Cloudflare Pages 에 이 저장소 연결(빌드 `npm run export:web`, 출력 `dist`). 연결은 jeremy 가 Cloudflare 화면에서 |
+| 웹에서 빠진 것 | 기기 캘린더(일정 카드 숨김, 인사는 날씨로), 스토어 결제(더미 그대로), 푸시 알림 |
 | 앱 | Expo SDK 58 + expo-router + zustand. `app/`(홈·엽서함·옷장·친구들), `components/`, `store/`, `data/`, `services/` |
 | 폰 설치 | EAS preview APK 빌드 성공, 본인 Android 폰에 설치 완료 (EAS 계정 `jeremyoh`, 프로젝트 `memorypost`) |
 | 디버그 메뉴 | `EXPO_PUBLIC_DEV_MENU=1`일 때만 표시 (preview 프로필에 켜져 있음) |
@@ -36,13 +39,14 @@
 | 발표 자료 | https://claude.ai/artifact/MYZkmD853K4kNpmzKwDVht (16장) |
 
 ## 다음 할 일 후보
-1. 폰에서 써 본 피드백 반영 (UI·반응·문구)
-2. 미세먼지 연결 (에어코리아, 기상청 날씨는 10-25 연결 끝)
-3. 패키지명 확정 후 재빌드
-4. 출시 준비: production 프로필, 아이콘·스토어 문구, 비공개 테스트(12명·14일)
+1. 웹앱을 폰에서 써 본 피드백 반영 (UI·반응·문구)
+2. 처음 시작 상태(지금은 시연용 Lv.4·23일·엽서 2장) → 새로 시작 + 이름 짓기·지역 고르기
+3. 미세먼지 연결 (에어코리아, 기상청 날씨는 10-25 연결 끝)
+4. (스토어 출시를 다시 할 때) 패키지명 확정, production 프로필, 아이콘·스토어 문구
 
-## 명령어 (Windows PC: `C:\dev\memorypost-app`)
+## 명령어 (Windows PC: `C:\dev\memorypost-app`, 서울 서버: `~/work/memorypost-app`)
 ```
+npm run export:web                                      # 웹앱 빌드 → dist/
 npx expo start                                          # 개발 서버 (Expo Go)
 npx eas-cli@latest build -p android --profile preview   # 폰 설치용 APK 재빌드
 npx tsc --noEmit                                        # 타입 검사

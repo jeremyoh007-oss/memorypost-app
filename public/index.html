@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>%WEB_TITLE%</title>
+    <meta name="description" content="매일 인사하는 반려 친구, 추억 우체국" />
+    <meta name="theme-color" content="#F7F5F1" />
+    <!-- Installed to the home screen (PWA): name, icons and full-screen launch. -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="추억 우체국" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <!-- Korean fonts: Google Fonts sends only the glyph ranges on screen (theme/tokens F on web). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300..700&display=swap"
+    />
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      /* These styles make the body full-height */
+      html,
+      body {
+        height: 100%;
+        background-color: #f7f5f1;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+        overscroll-behavior: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* These styles make the root element full-height */
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>자바스크립트를 켜야 추억 우체국을 쓸 수 있어요.</noscript>
+    <!-- The root element for your Expo app. -->
+    <div id="root"></div>
+    <script>
+      // Offline after the first visit (public/sw.js). Skipped on localhost so dev reloads stay fresh.
+      if ('serviceWorker' in navigator && location.hostname !== 'localhost') {
+        addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+      }
+      // Ask the browser not to clear the saved game (bond, postcards) when space runs low.
+      if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
+    </script>
+  </body>
+</html>
